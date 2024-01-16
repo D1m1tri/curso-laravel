@@ -33,9 +33,9 @@ class LivroController extends Controller
     }
 
     // READ
-    public function show($isbn)
+    public function show($id)
     {
-        $livro = Livro::where('isbn', $isbn)->first();
+        $livro = Livro::where('id', $id)->first();
         if (!$livro) {
             abort(404, 'Livro não encontrado');
         }
@@ -47,9 +47,9 @@ class LivroController extends Controller
     }
 
     // UPDATE
-    public function edit($isbn)
+    public function edit($id)
     {
-        $livro = Livro::where('isbn', $isbn)->first();
+        $livro = Livro::where('id', $id)->first();
         if (!$livro) {
             abort(404, 'Livro não encontrado');
         }
@@ -59,9 +59,9 @@ class LivroController extends Controller
             ]);
         }
     }
-    public function update(Request $request, $isbn)
+    public function update(Request $request, $id)
     {
-        $livro = Livro::where('isbn', $isbn)->first();
+        $livro = Livro::where('id', $id)->first();
         if (!$livro) {
             abort(404, 'Livro não encontrado');
         }
@@ -75,9 +75,9 @@ class LivroController extends Controller
     }
 
     // DELETE
-    public function destroy($isbn)
+    public function destroy($id)
     {
-        $livro = Livro::where('isbn', $isbn)->first();
+        $livro = Livro::where('id', $id)->first();
         if (!$livro) {
             abort(404, 'Livro não encontrado');
         }
