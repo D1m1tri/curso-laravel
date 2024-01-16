@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LivroController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +14,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/livros', [\App\Http\Controllers\LivroController::class, 'index'])->name('livros.index');
+Route::resource('livros', LivroController::class)->names('livros');
 
-Route::get('/livros/{isbn}', [\App\Http\Controllers\LivroController::class, 'show'])->name('livros.show');
