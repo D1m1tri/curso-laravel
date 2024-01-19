@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Http\Requests\LivroRequest;
 use App\Models\Livro;
 
-class LivroController extends Controller
-{
+class LivroController extends Controller {
     public function index()
     {
         $livros = Livro::all();
@@ -16,74 +15,46 @@ class LivroController extends Controller
     }
 
     // CREATE
-    public function create()
-    {
+    public function create() {
         return view('livros.create', [
             'livro' => new Livro
         ]);
     }
-    public function store(Request $request)
-    {
-        $livro = new Livro;
-        $livro->titulo = $request->titulo;
-        $livro->autor = $request->autor;
-        $livro->isbn = $request->isbn;
-        $livro->save();
-        return redirect()->route('livros.index');
+    public function store(LivroRequest $request) {
+        $validated = $request->validated();
+        $livro = Livro::create($validated);
+        return redirect()->route('livros.show', [
+            'isbn' => $livro->isbn
+        ])->with('alert-success', 'Livro cadastrado com sucesso!');
     }
 
     // READ
-    public function show($id)
-    {
-        $livro = Livro::where('id', $id)->first();
-        if (!$livro) {
-            abort(404, 'Livro não encontrado');
-        }
-        else {
-            return view('livros.show', [
-                'livro' => $livro
-            ]);
-        }
+    public function show($isbn) {
+        $livro = Livro::where('isbn', $isbn)->first();
+        return view('livros.show', [
+            'livro' => $livro
+        ]);
     }
 
     // UPDATE
-    public function edit($id)
-    {
-        $livro = Livro::where('id', $id)->first();
-        if (!$livro) {
-            abort(404, 'Livro não encontrado');
-        }
-        else {
-            return view('livros.edit', [
-                'livro' => $livro
-            ]);
-        }
+    public function edit($isbn) {
+        $livro = Livro::where('isbn', $isbn)->first();
+        return view('livros.edit', [
+            'livro' => $livro
+        ]);
     }
-    public function update(Request $request, $id)
-    {
-        $livro = Livro::where('id', $id)->first();
-        if (!$livro) {
-            abort(404, 'Livro não encontrado');
-        }
-        else {
-            $livro->titulo = $request->titulo;
-            $livro->autor = $request->autor;
-            $livro->isbn = $request->isbn;
-            $livro->save();
-            return redirect()->route('livros.index');
-        }
+    public function update(LivroRequest $request, $livro) {
+        $validated = $request->validated();
+        $livro->update($validated);
+        return redirect()->route('livros.show', [
+            'isbn' => $livro->isbn
+        ])->with('alert-success', 'Livro atualizado com sucesso!');
     }
 
     // DELETE
-    public function destroy($id)
-    {
+    public function destroy($id) {
         $livro = Livro::where('id', $id)->first();
-        if (!$livro) {
-            abort(404, 'Livro não encontrado');
-        }
-        else {
-            $livro->delete();
-            return redirect()->route('livros.index');
-        }
+        $livro->delete();
+        return redirect()->route('livros.index');
     }
 }
